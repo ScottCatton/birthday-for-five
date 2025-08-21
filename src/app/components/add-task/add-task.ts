@@ -8,9 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrl: './add-task.css',
 })
 export class AddTask implements OnInit {
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
+  ngOnInit(): void {}
   form: FormGroup = new FormGroup({
     title: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
@@ -44,5 +42,8 @@ export class AddTask implements OnInit {
     return this.form.get('progress_level');
   }
 
-  addTask() {}
+  addTask() {
+    console.log(this.title?.value);
+    console.log(this.description?.value);
+  }
 }
