@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TasksService } from '../../services/tasks-service';
+import { Task as ITask } from '../../interfaces/task';
+import { HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-task',
@@ -8,6 +12,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrl: './add-task.css',
 })
 export class AddTask implements OnInit {
+  constructor(private service: TasksService, private router: Router) {}
   ngOnInit(): void {}
   form: FormGroup = new FormGroup({
     title: new FormControl('', [Validators.required]),
@@ -43,7 +48,19 @@ export class AddTask implements OnInit {
   }
 
   addTask() {
-    console.log(this.title?.value);
-    console.log(this.description?.value);
+    // console.log(this.title?.value);
+    // console.log(this.description?.value);
+    let x = <ITask>this.form.value;
+    x.time = x.date + ' ' + this.time?.value;
+    this.service.addTask(x).subscribe(
+      (result: any) => {
+        console.log(result.task.title + ' has been added successfully!');
+        this.form.reset();
+        this.router.navigate(['home']);
+      },
+      (error: HttpResponse<AddTask>) => {
+        console.log(error);
+      }
+    );
   }
 }

@@ -17,4 +17,19 @@ export class TasksService {
 
     return this.http.get<ITask[]>('http://localhost:3000/tasks', options);
   }
+
+  addTask(form: any) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'applications/json',
+      Accept: 'applications/json',
+    });
+    const options = { headers: headers };
+    console.log(JSON.stringify(form));
+
+    return this.http.post<ITask>(
+      'http://localhost:3000/tasks',
+      JSON.stringify(form),
+      options
+    );
+  }
 }
