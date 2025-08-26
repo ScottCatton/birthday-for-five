@@ -11,7 +11,4 @@ export class Task implements OnInit {
   @Input() task!: ITask;
   constructor(private service: TasksService) {}
   ngOnInit() {}
-
-  editTask() {}
-  deleteTask() {}
 }

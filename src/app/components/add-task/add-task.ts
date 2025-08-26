@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { TasksService } from '../../services/tasks-service';
 import { Task as ITask } from '../../interfaces/task';
 import { HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-task',
@@ -12,17 +17,62 @@ import { Router } from '@angular/router';
   styleUrl: './add-task.css',
 })
 export class AddTask implements OnInit {
-  constructor(private service: TasksService, private router: Router) {}
-  ngOnInit(): void {}
-  form: FormGroup = new FormGroup({
-    title: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
-    date: new FormControl('', [Validators.required]),
-    time: new FormControl('', [Validators.required]),
-    priority_level: new FormControl('', [Validators.required]),
-    category: new FormControl('', [Validators.required]),
-    progress_level: new FormControl('', [Validators.required]),
-  });
+  form!: FormGroup;
+  constructor(
+    private service: TasksService,
+    private router: Router,
+    private formBuilderInstance: FormBuilder,
+    private route: ActivatedRoute
+  ) {
+    this.form = formBuilderInstance.group({
+      id: 0,
+      title: new FormControl('', [Validators.required]),
+      description: new FormControl('', [Validators.required]),
+      date: new FormControl('', [Validators.required]),
+      time: new FormControl('', [Validators.required]),
+      priority_level: new FormControl('', [Validators.required]),
+      category: new FormControl('', [Validators.required]),
+      progress_level: new FormControl('', [Validators.required]),
+    });
+  }
+  ngOnInit(): void {
+    // get the course id from current URL via paramMap observable object
+    this.route.paramMap.subscribe((params) => {
+      // check if id is present in params
+      let id = params.get('id');
+      // If id is present, we can use it to get the course data from our API
+      if (id) {
+        // get course data using couse service class
+        this.service.getTask(parseInt(id)).subscribe(
+          (response: ITask) => {
+            // update the form with course data
+            this.form.patchValue({
+              id: response.id,
+              title: response.title,
+              description: response.description,
+              date: response.date,
+              time: response.time,
+              priority_level: response.priority_level,
+              category: response.category,
+              progress_level: response.progress_level,
+            });
+          },
+          (error: Error) => {
+            console.log(error);
+          }
+        );
+      }
+    });
+  }
+  // form: FormGroup = new FormGroup({
+  //   title: new FormControl('', [Validators.required]),
+  //   description: new FormControl('', [Validators.required]),
+  //   date: new FormControl('', [Validators.required]),
+  //   time: new FormControl('', [Validators.required]),
+  //   priority_level: new FormControl('', [Validators.required]),
+  //   category: new FormControl('', [Validators.required]),
+  //   progress_level: new FormControl('', [Validators.required]),
+  // });
 
   get title() {
     return this.form.get('title');
@@ -48,20 +98,37 @@ export class AddTask implements OnInit {
   }
 
   add_task() {
+    let id = this.route.snapshot.paramMap.get('id');
     let x = <ITask>this.form.value;
-    x.time = x.date + ' ' + this.time?.value;
-    console.log('Value being passed to addTask(): ', x);
-    console.log(typeof x);
+    console.log(id);
 
-    this.service.addTask(x).subscribe(
-      (result: any) => {
-        console.log(result.title + ' has been added successfully!');
-        this.form.reset();
-        this.router.navigate(['home']);
-      },
-      (error: HttpResponse<AddTask>) => {
-        console.log(error);
-      }
-    );
+    if (id) {
+      //update task/edit task
+      console.log('id is present');
+
+      this.service.editTask(parseInt(id), x).subscribe(
+        (response: ITask) => {
+          console.log('Task Updated:', response);
+          this.form.reset();
+          this.router.navigate(['tasks']);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } else {
+      x.time = x.date + ' ' + this.time?.value;
+
+      this.service.addTask(x).subscribe(
+        (result: any) => {
+          console.log(result.title + ' has been added successfully!');
+          this.form.reset();
+          this.router.navigate(['home']);
+        },
+        (error: HttpResponse<AddTask>) => {
+          console.log(error);
+        }
+      );
+    }
   }
 }

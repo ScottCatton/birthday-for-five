@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'home', component: Home },
   { path: 'tasks', component: Tasks },
   { path: 'tasks/add-task', component: AddTask },
+  { path: 'tasks/add-task/:id', component: AddTask },
   { path: '**', redirectTo: 'home' },
 ];
 

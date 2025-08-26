@@ -22,6 +22,11 @@ export class TasksService {
     ); // add "<ITask[]>" after get if doesnt work
   }
 
+  getTask(id: number): Observable<ITask> {
+    // We can use <> to specify the type of data we expect from the API call
+    return this.http.get<ITask>('http://localhost:3000/tasks/' + id);
+  }
+
   addTask(form: any) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -51,6 +56,12 @@ export class TasksService {
     return this.http.post('http://localhost:3000/tasks', form, options);
   }
 
-  editTask() {}
+  editTask(id: number, updatedTask: ITask): Observable<ITask> {
+    // We can use <> to specify the type of data we expect from the API call
+    return this.http.patch<ITask>(
+      'http://localhost:3000/tasks/' + id,
+      updatedTask
+    );
+  }
   deleteTask() {}
 }
