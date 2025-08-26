@@ -7,7 +7,7 @@ import { AddTask } from './components/add-task/add-task';
 const routes: Routes = [
   { path: 'home', component: Home },
   { path: 'tasks', component: Tasks },
-  { path: 'add-task', component: AddTask },
+  { path: 'tasks/add-task', component: AddTask },
   { path: '**', redirectTo: 'home' },
 ];
 

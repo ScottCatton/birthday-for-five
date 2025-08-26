@@ -47,14 +47,15 @@ export class AddTask implements OnInit {
     return this.form.get('progress_level');
   }
 
-  addTask() {
-    // console.log(this.title?.value);
-    // console.log(this.description?.value);
+  add_task() {
     let x = <ITask>this.form.value;
     x.time = x.date + ' ' + this.time?.value;
+    console.log('Value being passed to addTask(): ', x);
+    console.log(typeof x);
+
     this.service.addTask(x).subscribe(
       (result: any) => {
-        console.log(result.task.title + ' has been added successfully!');
+        console.log(result.title + ' has been added successfully!');
         this.form.reset();
         this.router.navigate(['home']);
       },

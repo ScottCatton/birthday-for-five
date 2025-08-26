@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Task as ITask } from '../../interfaces/task';
+import { TasksService } from '../../services/tasks-service';
 @Component({
   selector: 'app-task',
   standalone: false,
@@ -8,6 +9,9 @@ import { Task as ITask } from '../../interfaces/task';
 })
 export class Task implements OnInit {
   @Input() task!: ITask;
-  constructor() {}
+  constructor(private service: TasksService) {}
   ngOnInit() {}
+
+  editTask() {}
+  deleteTask() {}
 }
