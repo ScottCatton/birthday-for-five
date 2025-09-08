@@ -1,3 +1,9 @@
+<div class="sortContainer">
+  <button class="sortBtn" (click)="sortByTitle()">Sort by Title</button>
+  <button class="sortBtn" (click)="sortByPriority()">Sort by Priority</button>
+  <button class="sortBtn" (click)="sortByDueDate()">Sort by Time</button>
+</div>
+
 <div *ngFor="let task of tasks">
   <app-task [task]="task" (deleteTask)="onDeleteTask($event)"></app-task>
 </div>
