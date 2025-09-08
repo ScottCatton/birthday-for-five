@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Task as ITask } from '../../interfaces/task';
 import { TasksService } from '../../services/tasks-service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-task',
   standalone: false,
@@ -9,6 +10,11 @@ import { TasksService } from '../../services/tasks-service';
 })
 export class Task implements OnInit {
   @Input() task!: ITask;
-  constructor(private service: TasksService) {}
+  @Output() deleteTask = new EventEmitter<number>();
+  constructor(private service: TasksService, private router: Router) {}
   ngOnInit() {}
+
+  onDelete(id: number) {
+    this.deleteTask.emit(id);
+  }
 }

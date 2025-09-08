@@ -15,5 +15,5 @@
     <hr />
   </div>
   <a [routerLink]="['/tasks/add-task/', task.id]"><button>Edit Task</button></a>
-  <!-- <button (click)="deleteTask()">Delete Task</button> -->
+  <button (click)="onDelete(task.id)">Delete Task</button>
 </div>

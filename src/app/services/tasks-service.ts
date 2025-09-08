@@ -47,5 +47,7 @@ export class TasksService {
       updatedTask
     );
   }
-  deleteTask() {}
+  deleteTask(id: number): Observable<ITask> {
+    return this.http.delete<ITask>('http://localhost:3000/tasks/' + id);
+  }
 }
